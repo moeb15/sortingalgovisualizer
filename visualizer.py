@@ -1,4 +1,3 @@
-from doctest import FAIL_FAST
 from math import floor
 import pygame
 import random
@@ -147,14 +146,21 @@ def counting_sort(draw_info, ascending=True):
 
     for m in range(len(lst)):
         if lst[m] in dict_c:
-            dict_c[lst[m]] += 1
+            if ascending:
+                dict_c[lst[m]] += 1
+            if not ascending:
+                dict_c[lst[m]] += -1
 
     for l in range(1, k+1):
         dict_c[l] += dict_c[l-1]
 
     for j in range(len(lst) - 1, -1, -1):
-        lst_out[dict_c[lst[j]]-1] = lst[j]
-        dict_c[lst[j]] += -1
+        if ascending:
+            lst_out[dict_c[lst[j]]-1] = lst[j]
+            dict_c[lst[j]] += -1
+        if not ascending:
+            lst_out[dict_c[lst[j]]+1] = lst[j]
+            dict_c[lst[j]] += 1
         draw_info.set_list(lst_out)
         draw_lst(draw_info, {j: draw_info.BLUE, j + 1: draw_info.RED}, True)
         yield True
