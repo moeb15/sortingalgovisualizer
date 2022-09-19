@@ -18,7 +18,7 @@ class DrawInformation:
         (192, 192, 192)
     ]
 
-    FONT = pygame.font.SysFont('consolas', 20)
+    FONT = pygame.font.SysFont('consolas', 15)
     LARGE_FONT = pygame.font.SysFont('consolas', 25)
     SIDE_PAD = 100
     TOP_PAD = 150
@@ -65,7 +65,7 @@ def draw(draw_info, algo_name, ascending):
         controls, (draw_info.width/2 - controls.get_width()/2, 45))
 
     sorting = draw_info.FONT.render(
-        "I - Insertion Sort | B - Bubble Sort | C - Counting Sort", 1, draw_info.BLACK)
+        "I - Insertion Sort | B - Bubble Sort | C - Counting Sort | S - Selection Sort" , 1, draw_info.BLACK)
     draw_info.window.blit(
         sorting, (draw_info.width/2 - sorting.get_width()/2, 75))
 
@@ -160,6 +160,22 @@ def counting_sort(draw_info, ascending=True):
         yield True
     return lst_out
 
+def selection_sort(draw_info, ascending = True):
+    lst = draw_info.lst
+    for j in range(len(lst) - 1):
+        cur_index = j
+        for i in range(j + 1, len(lst)):
+            if ascending:
+                if lst[cur_index] > lst[i]:
+                    cur_index = i
+            if not ascending:
+                if lst[cur_index] < lst[i]:
+                    cur_index = i
+        if cur_index != j:
+            lst[j], lst[cur_index] = lst[cur_index], lst[j]
+            draw_lst(draw_info, {cur_index: draw_info.BLUE, j: draw_info.RED}, True)
+            yield True
+    return lst
 
 def main():
     run = True
@@ -179,7 +195,7 @@ def main():
     sorting_algorithm_generator = None
 
     while run:
-        clock.tick(144)
+        clock.tick(60)
 
         if sorting:
             try:
@@ -214,6 +230,9 @@ def main():
             elif event.key == pygame.K_c and not sorting:
                 sorting_algorithm = counting_sort
                 sorting_algorithm_name = "Counting Sort"
+            elif event.key == pygame.K_s and not sorting:
+                sorting_algorithm = selection_sort
+                sorting_algorithm_name = "Selection Sort"
 
     pygame.quit()
 
